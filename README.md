@@ -2,8 +2,10 @@
 
 ## Introduction
 
-A simple, you can call it primitive(maybe), backup system for your docker containers.
+A simple, you can call it primitive(maybe) but useful, backup system for your docker container's data. It's based on the idea of having a cron job that stops the container, makes a backup of the data, and then starts the container again. It also has the ability to make differential and incremental backups, without stopping the container.
 
+> This script only backups the persistent data folders, not the container itself or its configuration. You need to backup any configuration (docker-compose.yml, etc.) separately.
+{.is-warning}
 
 ## Installation
 
