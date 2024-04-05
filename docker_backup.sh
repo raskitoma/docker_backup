@@ -266,6 +266,22 @@ backup_containers() {
                     echo "[$(date +"%Y-%m-%d %T")] | [ $current_container ] | -- Backup of container $container_path completed successfully" 2>&1 | tee -a "$backup_log_file"
                 fi
 
+                # if we did a diff or incr backup, let's check if we have at least one full backup file
+                if [ "$backup_kind" = "DIFFERENTIAL" ] || [ "$backup_kind" = "INCREMENTAL" ]; then
+                    local full_backup_files=("$destination_path/$current_container/full-$current_container"*.tar.gz)
+                    if [ ${#full_backup_files[@]} -eq 0 ]; then
+                        echo "Full backup not found."
+                        echo "[$(date +"%Y-%m-%d %T")] | [ $current_container ] | -- Error: Full backup not found, using current $backup_kind to create a full backup." 2>&1 | tee -a "$backup_log_file" >> "$error_log_file"
+                        # copy the file as the first full backup
+                        cp "$destination_path/$current_container/$file_name_start-$current_container-$backup_date.tar.gz" "$destination_path/$current_container/full-$current_container-$backup_date.tar.gz"
+                        # duplicate the last snapshot file
+                        cp "$snapshot_path/$current_container-$backup_kind.file" "$snapshot_path/$current_container-full.file"
+                        echo "[$(date +"%Y-%m-%d %T")] | [ $current_container ] | -- Full backup created: $destination_path/$current_container/full-$current_container-$backup_date.tar.gz" 2>&1 | tee -a "$backup_log_file"
+                    else
+                        echo "Full backup found: ${full_backup_files[0]}"
+                    fi
+                fi
+
                 # Start container if it was stopped
                 if [[ "$docker_stopped" == true ]]; then
                     echo "[$(date +"%Y-%m-%d %T")] | [ $current_container ] | Starting container $current_container" 2>&1 | tee -a "$backup_log_file"
