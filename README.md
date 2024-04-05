@@ -44,6 +44,7 @@ We need to call it `config.ini` and it needs to be placed next to the script, yo
 source_path=/docker_data
 destination_path=/mnt/docker_data_backup
 destination_mountpoint=/mnt
+check_the_mountpoint=1
 log_path=/home/ubunt/docker_backup/logs
 notification_path=/home/ubuntu/docker_backup/slack
 snapshot_path=/home/ubuntu/docker_backup/snapshot_track
@@ -86,6 +87,7 @@ Handles the master parameters:
 - `source_path`: The path were all containers store its data (each on one subfolder).
 - `destination_path`: The full destination path were we want to store our files, it could be the same as `destination_mountpoint` or it could be also a child inside it.
 - `destination_mountpoint`: The base path for the `destination_path`. It's the actual path that the script will check if it's properly mounted.
+- `check_the_mountpoint`: This is a flag to check if the `destination_mountpoint` is a mounted device. It's useful to prevent the script from writing to a local path that is not mounted. If you are using a local path, set it to 0.
 - `log_path`: base path to store log data information.
 - `notification_path`: path used by the script to store a tag to prevent multiple unnecesary notifications to Slack.
 - `snapshot_path`: path used by the script to store snapshot information to permit the script work with Full, Differential and Incremental backups efficiently.

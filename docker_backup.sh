@@ -384,8 +384,12 @@ echo "[$(date +"%Y-%m-%d %T")] | [ $hostname ] | Docker Container Backup process
 
 # Check if the destination mount point is available
 echo ""
-echo "Checking mountpoint: $destination_mountpoint"
-error_message=$(check_mountpoint)
+if [[ "$check_the_mountpoint" == "1" ]]; then
+    echo "Checking mountpoint: $destination_mountpoint"
+    error_message=$(check_mountpoint)
+else
+    echo "Skipping mountpoint check."
+fi
 
 if [ -n "$error_message" ]; then
     echo "Error: $error_message"
