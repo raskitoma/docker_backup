@@ -254,7 +254,7 @@ backup_containers() {
 
                 # Backup the container
                 echo "[$(date +"%Y-%m-%d %T")] | [ $current_container ] | Getting ---$backup_kind--- Backup of container $current_container" 2>&1 | tee -a "$backup_log_file"
-                tar -czpf "$destination_path/$current_container/$file_name_start-$current_container-$backup_date.tar.gz" $snapshot_option "$source_path/$path" 2>&1
+                tar -czpf "$destination_path/$current_container/$file_name_start-$current_container-$backup_date.tar.gz" $snapshot_option "$source_path/$path" 2>/dev/null
                 tar_exit_code=$?
                 if [ $tar_exit_code -ne 0 ]; then
                     tar_error=$(tar -czpf "$destination_path/$current_container/$file_name_start-$current_container-$backup_date.tar.gz" $snapshot_option "$source_path/$path" 2>&1)
